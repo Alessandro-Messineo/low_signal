@@ -1,17 +1,20 @@
 package org.ecommerce.java.low_signal.model;
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "addresses")
-        public class Address {
+public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,6 +50,11 @@ import jakarta.validation.constraints.Size;
     @Column(nullable = false, length = 100)
     private String country;
 
+    @OneToMany(mappedBy = "shippingAddress")
+    private List<Order> shippingOrders;
+
+    @OneToMany(mappedBy = "billingAddress")
+    private List<Order> billingOrders;
 
     public Address() {
     }
@@ -107,4 +115,19 @@ import jakarta.validation.constraints.Size;
         this.country = value;
     }
 
+    public List<Order> getShippingOrders() {
+        return this.shippingOrders;
+    }
+
+    public void setShippingOrders(List<Order> value) {
+        this.shippingOrders = value;
+    }
+
+    public List<Order> getBillingOrders() {
+        return this.billingOrders;
+    }
+
+    public void setBillingOrders(List<Order> value) {
+        this.billingOrders = value;
+    }
 }

@@ -3,7 +3,6 @@ package org.ecommerce.java.low_signal.model;
 import java.util.List;
 import java.util.Set;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -53,10 +52,10 @@ public class User {
     @Column(nullable = false, length = 10)
     private String phone;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<UserAddress> userAddresses;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
     @ManyToMany(fetch = FetchType.LAZY)

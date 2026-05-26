@@ -1,6 +1,7 @@
 package org.ecommerce.java.low_signal.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -13,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -53,6 +55,9 @@ public class ProductVariant {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id", nullable = false)
   private Product product;
+
+  @OneToMany(mappedBy = "productVariant", fetch = FetchType.LAZY)
+  private List<OrderItem> orderItems;
 
   public ProductVariant() {
   }
@@ -111,5 +116,13 @@ public class ProductVariant {
 
   public void setProduct(Product value) {
     this.product = value;
+  }
+
+  public List<OrderItem> getOrderItems() {
+    return this.orderItems;
+  }
+
+  public void setOrderItems(List<OrderItem> value) {
+    this.orderItems = value;
   }
 }

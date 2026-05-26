@@ -2,6 +2,7 @@ package org.ecommerce.java.low_signal.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -14,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -67,6 +69,15 @@ public class Product {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "collection_id", nullable = false)
   private Collection collection;
+
+  @OneToMany(mappedBy = "product")
+  private List<ProductImage> images;
+
+  @OneToMany(mappedBy = "product")
+  private List<ProductVariant> variants;
+
+  @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+  private List<OrderItem> orderItems;
 
   public Product() {
   }
@@ -149,5 +160,29 @@ public class Product {
 
   public void setCollection(Collection value) {
     this.collection = value;
+  }
+
+  public List<ProductImage> getImages() {
+    return this.images;
+  }
+
+  public void setImages(List<ProductImage> value) {
+    this.images = value;
+  }
+
+  public List<ProductVariant> getVariants() {
+    return this.variants;
+  }
+
+  public void setVariants(List<ProductVariant> value) {
+    this.variants = value;
+  }
+
+  public List<OrderItem> getOrderItems() {
+    return this.orderItems;
+  }
+
+  public void setOrderItems(List<OrderItem> value) {
+    this.orderItems = value;
   }
 }
