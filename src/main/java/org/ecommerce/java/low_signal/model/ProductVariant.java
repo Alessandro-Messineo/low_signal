@@ -7,9 +7,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -20,78 +23,93 @@ import jakarta.validation.constraints.Size;
 @Table(name = "product_variants")
 public class ProductVariant {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @NotBlank(message = "Enter size of product")
-    @Size(max = 10)
-    @Column(nullable = false, length = 10)
-    private String size;
-    
-    @NotNull(message = "Enter quantity")
-    @Min(value = 0)
-    @Column(name = "stock_quantity", nullable = false)
-    private Integer stockQuantity;
+  @NotBlank(message = "Enter size of product")
+  @Size(max = 10)
+  @Column(nullable = false, length = 10)
+  private String size;
 
-    @NotBlank(message = "Enter sku of product")
-    @Size(max = 100)
-    @Column(nullable = false,unique = true, length = 100)
-    private String sku;
+  @NotNull(message = "Enter quantity")
+  @Min(value = 0)
+  @Column(name = "stock_quantity", nullable = false)
+  private Integer stockQuantity;
 
-    @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+  @NotBlank(message = "Enter sku of product")
+  @Size(max = 100)
+  @Column(nullable = false, unique = true, length = 100)
+  private String sku;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+  @CreationTimestamp
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private LocalDateTime createdAt;
 
-    // aggiungere product_id per la relazione
+  @UpdateTimestamp
+  @Column(name = "updated_at", nullable = false)
+  private LocalDateTime updatedAt;
 
-    public ProductVariant(){}
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "product_id", nullable = false)
+  private Product product;
 
-    
+  public ProductVariant() {
+  }
 
-    public Integer getId() {
-      return this.id;
-    }
-    public void setId(Integer value) {
-      this.id = value;
-    }
+  public Integer getId() {
+    return this.id;
+  }
 
-    public String getSize() {
-      return this.size;
-    }
-    public void setSize(String value) {
-      this.size = value;
-    }
+  public void setId(Integer value) {
+    this.id = value;
+  }
 
-    public Integer getStockQuantity() {
-      return this.stockQuantity;
-    }
-    public void setStockQuantity(Integer value) {
-      this.stockQuantity = value;
-    }
+  public String getSize() {
+    return this.size;
+  }
 
-    public String getSku() {
-      return this.sku;
-    }
-    public void setSku(String value) {
-      this.sku = value;
-    }
+  public void setSize(String value) {
+    this.size = value;
+  }
 
-    public LocalDateTime getCreatedAt() {
-      return this.createdAt;
-    }
-    public void setCreatedAt(LocalDateTime value) {
-      this.createdAt = value;
-    }
+  public Integer getStockQuantity() {
+    return this.stockQuantity;
+  }
 
-    public LocalDateTime getUpdatedAt() {
-      return this.updatedAt;
-    }
-    public void setUpdatedAt(LocalDateTime value) {
-      this.updatedAt = value;
-    }
+  public void setStockQuantity(Integer value) {
+    this.stockQuantity = value;
+  }
+
+  public String getSku() {
+    return this.sku;
+  }
+
+  public void setSku(String value) {
+    this.sku = value;
+  }
+
+  public LocalDateTime getCreatedAt() {
+    return this.createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime value) {
+    this.createdAt = value;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return this.updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime value) {
+    this.updatedAt = value;
+  }
+
+  public Product getProduct() {
+    return this.product;
+  }
+
+  public void setProduct(Product value) {
+    this.product = value;
+  }
 }

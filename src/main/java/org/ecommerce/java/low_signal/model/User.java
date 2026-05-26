@@ -1,7 +1,9 @@
 package org.ecommerce.java.low_signal.model;
 
+import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -11,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -50,10 +53,14 @@ public class User {
     @Column(nullable = false, length = 10)
     private String phone;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserAddress> userAddresses;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Order> orders;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_user",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "role_user", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
     public User() {
@@ -113,5 +120,21 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public List<UserAddress> getUserAddresses() {
+        return this.userAddresses;
+    }
+
+    public void setUserAddresses(List<UserAddress> value) {
+        this.userAddresses = value;
+    }
+
+    public List<Order> getOrders() {
+        return this.orders;
+    }
+
+    public void setOrders(List<Order> value) {
+        this.orders = value;
     }
 }

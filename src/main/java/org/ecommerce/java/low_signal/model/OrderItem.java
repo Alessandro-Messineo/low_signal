@@ -4,9 +4,12 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
@@ -42,11 +45,17 @@ public class OrderItem {
     @Column(nullable = false, length = 10)
     private String size;
 
-    // aggiungere product_id per la relazione
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
 
-    // aggiungere order_id per la relazione
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_variant_id", nullable = false)
+    private ProductVariant productVariant;
 
-    // aggiungere product_variant_id per la relazione
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", nullable = false)
+    private Order order;
 
     public OrderItem() {
     }
@@ -86,5 +95,26 @@ public class OrderItem {
     }
     public void setSize(String value) {
       this.size = value;
+    }
+
+    public Product getProduct() {
+      return this.product;
+    }
+    public void setProduct(Product value) {
+      this.product = value;
+    }
+
+    public ProductVariant getProductVariant() {
+      return this.productVariant;
+    }
+    public void setProductVariant(ProductVariant value) {
+      this.productVariant = value;
+    }
+
+    public Order getOrder() {
+      return this.order;
+    }
+    public void setOrder(Order value) {
+      this.order = value;
     }
 }
