@@ -55,7 +55,7 @@ public class Collection {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "collection_status", nullable = false)
-  private String collectionStatus;
+  private CollectionStatus collectionStatus;
 
   @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)
@@ -139,11 +139,11 @@ public class Collection {
     this.season = value;
   }
 
-  public String getCollectionStatus() {
+  public CollectionStatus getCollectionStatus() {
     return this.collectionStatus;
   }
 
-  public void setCollectionStatus(String value) {
+  public void setCollectionStatus(CollectionStatus value) {
     this.collectionStatus = value;
   }
 }
