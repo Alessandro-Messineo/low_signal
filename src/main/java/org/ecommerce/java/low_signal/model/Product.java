@@ -40,6 +40,11 @@ public class Product {
   @Column(nullable = false, unique = true, length = 100)
   private String slug;
 
+  @NotBlank(message = "Enter tag of product")
+  @Size(max = 100)
+  @Column(nullable = false, length = 100)
+  private String tag;
+
   @NotBlank(message = "Enter description of product")
   @Size(max = 500)
   @Column(nullable = false, length = 500)
@@ -184,5 +189,13 @@ public class Product {
 
   public void setOrderItems(List<OrderItem> value) {
     this.orderItems = value;
+  }
+
+  public String getTag() {
+    return this.tag;
+  }
+
+  public void setTag(String value) {
+    this.tag = value;
   }
 }
