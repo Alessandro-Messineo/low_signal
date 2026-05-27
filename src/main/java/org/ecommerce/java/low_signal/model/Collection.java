@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,6 +40,11 @@ public class Collection {
   @Column(nullable = false, length = 500)
   private String description;
 
+  @NotBlank(message = "Enter season of collection")
+  @Size(max = 10)
+  @Column(nullable = false, length = 10)
+  private String season;
+
   @NotBlank(message = "Enter url image")
   @Size(max = 500)
   @Column(name = "hero_image", nullable = false, length = 500)
@@ -45,6 +52,10 @@ public class Collection {
 
   @Column(nullable = false)
   private boolean featured = false;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "collection_status", nullable = false)
+  private String collectionStatus;
 
   @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)
@@ -118,5 +129,21 @@ public class Collection {
 
   public void setProducts(List<Product> value) {
     this.products = value;
+  }
+
+  public String getSeason() {
+    return this.season;
+  }
+
+  public void setSeason(String value) {
+    this.season = value;
+  }
+
+  public String getCollectionStatus() {
+    return this.collectionStatus;
+  }
+
+  public void setCollectionStatus(String value) {
+    this.collectionStatus = value;
   }
 }
