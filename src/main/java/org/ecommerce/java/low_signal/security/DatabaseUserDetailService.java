@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class DatabaseUserDetailService implements UserDetailsService{
 
@@ -17,6 +19,7 @@ public class DatabaseUserDetailService implements UserDetailsService{
     private UserRepository userRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
          Optional<User> userAttempt = userRepository.findByEmail(email);
 

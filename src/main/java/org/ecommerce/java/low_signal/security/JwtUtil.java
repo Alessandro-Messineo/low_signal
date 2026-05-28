@@ -49,6 +49,7 @@ public class JwtUtil {
             getClaims(token);
             return true;
         } catch (JwtException e) {
+            System.out.println("❌ TOKEN ERROR: " + e.getMessage());
             return false;
         }
     }
