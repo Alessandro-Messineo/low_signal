@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                         // .requestMatchers("/api/auth/register").permitAll()
                         // .requestMatchers("/api/auth/login").permitAll() 
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         // Endpoint riservati agli admin
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         // Tutto il resto richiede un token valido
