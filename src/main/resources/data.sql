@@ -1,34 +1,37 @@
 -- =============================================================
 -- Seed data for low_signal
--- Eseguito automaticamente al primo avvio del container Docker
+-- Usa ON CONFLICT DO NOTHING per evitare errori al riavvio
 -- =============================================================
- 
--- Disabilita i trigger per evitare problemi di foreign key durante l'import
+
 SET session_replication_role = replica;
- 
+
 -- ─── Collections ──────────────────────────────────────────────
 INSERT INTO public.collections (id, collection_status, created_at, description, featured, hero_image, name, season, slug) VALUES
 (1, 'DISPONIBILE', '2025-03-01 10:00:00', 'Six pieces built for friction. Functional silhouettes, industrial materials, zero compromise. The collection that defines the season.', false, 'https://images.unsplash.com/photo-1756276900419-868625adff43?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 25', 'SS25', 'spring-summer-25'),
 (2, 'SOLD_OUT',    '2024-09-01 10:00:00', 'Heavy textiles. Muted tones. A collection built for cold cities and darker hours. Three silhouettes, maximum impact.',                false, 'https://images.unsplash.com/photo-1771580425850-3dbcdfd97b54?w=1400&h=900&fit=crop&auto=format', 'FALL / WINTER 24',   'FW24', 'fall-winter-24'),
-(3, 'SOLD_OUT',    '2024-03-01 10:00:00', 'Lightweight construction, maximum movement. Pigment-dyed canvas and technical mesh built for the streets in summer.',             false, 'https://images.unsplash.com/photo-1772997657431-6c3272ccaf15?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 24', 'SS24', 'spring-summer-24');
- 
+(3, 'SOLD_OUT',    '2024-03-01 10:00:00', 'Lightweight construction, maximum movement. Pigment-dyed canvas and technical mesh built for the streets in summer.',             false, 'https://images.unsplash.com/photo-1772997657431-6c3272ccaf15?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 24', 'SS24', 'spring-summer-24')
+ON CONFLICT DO NOTHING;
+
 -- ─── Roles ────────────────────────────────────────────────────
 INSERT INTO public.roles (id, name) VALUES
 (1, 'USER'),
-(2, 'ADMIN');
- 
+(2, 'ADMIN')
+ON CONFLICT DO NOTHING;
+
 -- ─── Users ────────────────────────────────────────────────────
 INSERT INTO public.users (id, email, name, password, phone, surname) VALUES
 (1, 'mario.rossi@email.com', 'Mario', '{bcrypt}$2a$10$R34/vvODmsPUs6brVBthCuK.iG.DW3mdgjNMY840lli3I2rYZvH4u', '1234567890', 'Rossi'),
 (2, 'suca.rossi@email.com',  'ales',  '{bcrypt}$2a$10$uvWgkyFO6AQ6X7K9VrSYTOpnmihFGRDCEdHyVQXputEyxvAJEt7am', '1234567890', 'mess'),
 (3, 'lucone@email.com',      'Luca',  '{bcrypt}$2a$10$JJuOC1Y3QPdCr1gZLr9B9emoeQkEjJoVxYb000Ww8ix6fwf9bynHi', '1234567890', 'Ruggeri'),
 (4, 'gay@email.com',         'Augu',  '{bcrypt}$2a$10$jB4bLLTznZiaaCQlSHwaluthkPzSp.KEhsDnoKZwCq2BWtD9QZcfK',  '1234567890', 'Ricchione'),
-(5, 'teonegro@email.com',    'Teo',   '{bcrypt}$2a$10$NneB/vVm42m0adtY7NOwCOjUyrSTz9odGkTzvamotk4cYPZhCdUi2', '1234567890', 'Simenza');
- 
+(5, 'teonegro@email.com',    'Teo',   '{bcrypt}$2a$10$NneB/vVm42m0adtY7NOwCOjUyrSTz9odGkTzvamotk4cYPZhCdUi2', '1234567890', 'Simenza')
+ON CONFLICT DO NOTHING;
+
 -- ─── Role - User ──────────────────────────────────────────────
 INSERT INTO public.role_user (user_id, role_id) VALUES
-(1, 1), (2, 1), (3, 1), (4, 1), (5, 1);
- 
+(1, 1), (2, 1), (3, 1), (4, 1), (5, 1)
+ON CONFLICT DO NOTHING;
+
 -- ─── Products ─────────────────────────────────────────────────
 INSERT INTO public.products (id, compare_price, created_at, description, featured, name, price, slug, tag, updated_at, collection_id) VALUES
 (1,  192.40, '2025-03-01 10:00:00', '950gsm French terry. Oversized silhouette. Raw edge seams.',                       false, 'WRAITH HOODIE',        148.00, 'wraith-hoodie',        'NEW DROP', '2025-03-01 10:00:00', 1),
@@ -40,8 +43,9 @@ INSERT INTO public.products (id, compare_price, created_at, description, feature
 (7,  426.40, '2024-09-01 10:00:00', 'Waxed cotton ripstop. Storm flap. Removable liner.',                              false, 'STATIC FIELD JACKET',  328.00, 'static-field-jacket',  'SOLD OUT', '2024-09-01 10:00:00', 2),
 (8,  254.80, '2024-09-01 10:00:00', 'Japanese merino wool. Dropped shoulder. Ribbed hem and cuffs.',                   false, 'GRID KNIT SWEATER',    196.00, 'grid-knit-sweater',    'SOLD OUT', '2024-09-01 10:00:00', 2),
 (9,  244.40, '2024-03-01 10:00:00', 'Stonewashed canvas. Six-pocket utility. Cinch ankle.',                            false, 'SHADOW CARGO',         188.00, 'shadow-cargo',         'SOLD OUT', '2024-03-01 10:00:00', 3),
-(10, 179.40, '2024-03-01 10:00:00', 'Heavyweight fleece. Exposed seam construction. Kangaroo pocket.',                 false, 'RAW SEAM HOODIE',      138.00, 'raw-seam-hoodie',      'SOLD OUT', '2024-03-01 10:00:00', 3);
- 
+(10, 179.40, '2024-03-01 10:00:00', 'Heavyweight fleece. Exposed seam construction. Kangaroo pocket.',                 false, 'RAW SEAM HOODIE',      138.00, 'raw-seam-hoodie',      'SOLD OUT', '2024-03-01 10:00:00', 3)
+ON CONFLICT DO NOTHING;
+
 -- ─── Product Images ───────────────────────────────────────────
 INSERT INTO public.product_images (id, alt_text, image_url, is_primary, product_id) VALUES
 (1,  'WRAITH HOODIE',        'https://images.unsplash.com/photo-1768084356884-22bb77e76931?w=600&h=750&fit=crop&auto=format', true, 1),
@@ -53,8 +57,9 @@ INSERT INTO public.product_images (id, alt_text, image_url, is_primary, product_
 (7,  'STATIC FIELD JACKET',  'https://images.unsplash.com/photo-1759188863379-ae70c6f84bac?w=600&h=750&fit=crop&auto=format', true, 7),
 (8,  'GRID KNIT SWEATER',    'https://images.unsplash.com/photo-1604689010734-72dc5075512e?w=600&h=750&fit=crop&auto=format', true, 8),
 (9,  'SHADOW CARGO',         'https://images.unsplash.com/photo-1646633632840-1c95d61c909e?w=600&h=750&fit=crop&auto=format', true, 9),
-(10, 'RAW SEAM HOODIE',      'https://images.unsplash.com/photo-1752674316405-549b77559eb3?w=600&h=750&fit=crop&auto=format', true, 10);
- 
+(10, 'RAW SEAM HOODIE',      'https://images.unsplash.com/photo-1752674316405-549b77559eb3?w=600&h=750&fit=crop&auto=format', true, 10)
+ON CONFLICT DO NOTHING;
+
 -- ─── Product Variants ─────────────────────────────────────────
 INSERT INTO public.product_variants (id, created_at, size, sku, stock_quantity, updated_at, product_id) VALUES
 (1,  '2025-03-01 10:00:00', 'XS',       'WRAITH-HOODIE-XS',          10, '2025-03-01 10:00:00', 1),
@@ -96,8 +101,9 @@ INSERT INTO public.product_variants (id, created_at, size, sku, stock_quantity, 
 (37, '2024-03-01 10:00:00', 'S',        'RAW-SEAM-HOODIE-S',         10, '2024-03-01 10:00:00', 10),
 (38, '2024-03-01 10:00:00', 'M',        'RAW-SEAM-HOODIE-M',         10, '2024-03-01 10:00:00', 10),
 (39, '2024-03-01 10:00:00', 'L',        'RAW-SEAM-HOODIE-L',         10, '2024-03-01 10:00:00', 10),
-(40, '2024-03-01 10:00:00', 'XL',       'RAW-SEAM-HOODIE-XL',        10, '2024-03-01 10:00:00', 10);
- 
+(40, '2024-03-01 10:00:00', 'XL',       'RAW-SEAM-HOODIE-XL',        10, '2024-03-01 10:00:00', 10)
+ON CONFLICT DO NOTHING;
+
 -- ─── Sequences ────────────────────────────────────────────────
 SELECT pg_catalog.setval('public.collections_id_seq',      3,  true);
 SELECT pg_catalog.setval('public.roles_id_seq',            2,  true);
@@ -106,6 +112,5 @@ SELECT pg_catalog.setval('public.products_id_seq',         10, true);
 SELECT pg_catalog.setval('public.product_images_id_seq',   10, true);
 SELECT pg_catalog.setval('public.product_variants_id_seq', 40, true);
 SELECT pg_catalog.setval('public.refresh_tokens_id_seq',   17, true);
- 
--- Riabilita i trigger
+
 SET session_replication_role = DEFAULT;
