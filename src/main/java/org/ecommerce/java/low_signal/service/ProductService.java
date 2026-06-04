@@ -1,6 +1,7 @@
 package org.ecommerce.java.low_signal.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.ecommerce.java.low_signal.model.Product;
 import org.ecommerce.java.low_signal.repository.ProductRepository;
@@ -15,6 +16,10 @@ public class ProductService {
 
     public List<Product> getAllProducts(){
         return productRepository.findAll();
+    }
+
+    public Optional<Product> getProductBySlug(String slug){
+        return productRepository.findBySlug(slug);
     }
 
 }
