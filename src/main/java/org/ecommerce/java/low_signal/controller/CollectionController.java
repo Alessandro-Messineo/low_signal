@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173/", allowCredentials = "true")
 @RequestMapping("/collections")
 public class CollectionController {
 
