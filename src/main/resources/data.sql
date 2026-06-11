@@ -3,20 +3,20 @@
 -- Usa ON CONFLICT DO NOTHING per evitare errori al riavvio
 -- =============================================================
 
-SET session_replication_role = replica;
+SET session_replication_role = replica^^
 
 -- ─── Collections ──────────────────────────────────────────────
 INSERT INTO public.collections (id, collection_status, created_at, description, featured, hero_image, name, season, slug) VALUES
 (1, 'DISPONIBILE', '2025-03-01 10:00:00', 'Six pieces built for friction. Functional silhouettes, industrial materials, zero compromise. The collection that defines the season.', false, 'https://images.unsplash.com/photo-1756276900419-868625adff43?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 25', 'SS25', 'spring-summer-25'),
 (2, 'SOLD_OUT',    '2024-09-01 10:00:00', 'Heavy textiles. Muted tones. A collection built for cold cities and darker hours. Three silhouettes, maximum impact.',                false, 'https://images.unsplash.com/photo-1771580425850-3dbcdfd97b54?w=1400&h=900&fit=crop&auto=format', 'FALL / WINTER 24',   'FW24', 'fall-winter-24'),
 (3, 'SOLD_OUT',    '2024-03-01 10:00:00', 'Lightweight construction, maximum movement. Pigment-dyed canvas and technical mesh built for the streets in summer.',             false, 'https://images.unsplash.com/photo-1772997657431-6c3272ccaf15?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 24', 'SS24', 'spring-summer-24')
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING^^
 
 -- ─── Roles ────────────────────────────────────────────────────
 INSERT INTO public.roles (id, name) VALUES
 (1, 'USER'),
 (2, 'ADMIN')
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING^^
 
 -- ─── Users ────────────────────────────────────────────────────
 INSERT INTO public.users (id, email, name, password, phone, surname) VALUES
@@ -25,12 +25,12 @@ INSERT INTO public.users (id, email, name, password, phone, surname) VALUES
 (3, 'lucone@email.com',      'Luca',  '{bcrypt}$2a$10$JJuOC1Y3QPdCr1gZLr9B9emoeQkEjJoVxYb000Ww8ix6fwf9bynHi', '1234567890', 'Ruggeri'),
 (4, 'gay@email.com',         'Augu',  '{bcrypt}$2a$10$jB4bLLTznZiaaCQlSHwaluthkPzSp.KEhsDnoKZwCq2BWtD9QZcfK',  '1234567890', 'Ricchione'),
 (5, 'teonegro@email.com',    'Teo',   '{bcrypt}$2a$10$NneB/vVm42m0adtY7NOwCOjUyrSTz9odGkTzvamotk4cYPZhCdUi2', '1234567890', 'Simenza')
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING^^
 
 -- ─── Role - User ──────────────────────────────────────────────
 INSERT INTO public.role_user (user_id, role_id) VALUES
 (1, 1), (2, 1), (3, 1), (4, 1), (5, 1)
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING^^
 
 -- ─── Products ─────────────────────────────────────────────────
 INSERT INTO public.products (id, compare_price, created_at, description, featured, name, price, slug, tag, updated_at, collection_id) VALUES
@@ -44,7 +44,7 @@ INSERT INTO public.products (id, compare_price, created_at, description, feature
 (8,  254.80, '2024-09-01 10:00:00', 'Japanese merino wool. Dropped shoulder. Ribbed hem and cuffs.',                   false, 'GRID KNIT SWEATER',    196.00, 'grid-knit-sweater',    'SOLD OUT', '2024-09-01 10:00:00', 2),
 (9,  244.40, '2024-03-01 10:00:00', 'Stonewashed canvas. Six-pocket utility. Cinch ankle.',                            false, 'SHADOW CARGO',         188.00, 'shadow-cargo',         'SOLD OUT', '2024-03-01 10:00:00', 3),
 (10, 179.40, '2024-03-01 10:00:00', 'Heavyweight fleece. Exposed seam construction. Kangaroo pocket.',                 false, 'RAW SEAM HOODIE',      138.00, 'raw-seam-hoodie',      'SOLD OUT', '2024-03-01 10:00:00', 3)
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING^^
 
 -- ─── Product Images ───────────────────────────────────────────
 INSERT INTO public.product_images (id, alt_text, image_url, is_primary, product_id) VALUES
@@ -58,7 +58,7 @@ INSERT INTO public.product_images (id, alt_text, image_url, is_primary, product_
 (8,  'GRID KNIT SWEATER',    'https://images.unsplash.com/photo-1604689010734-72dc5075512e?w=600&h=750&fit=crop&auto=format', true, 8),
 (9,  'SHADOW CARGO',         'https://images.unsplash.com/photo-1646633632840-1c95d61c909e?w=600&h=750&fit=crop&auto=format', true, 9),
 (10, 'RAW SEAM HOODIE',      'https://images.unsplash.com/photo-1752674316405-549b77559eb3?w=600&h=750&fit=crop&auto=format', true, 10)
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING^^
 
 -- ─── Product Variants ─────────────────────────────────────────
 INSERT INTO public.product_variants (id, created_at, size, sku, stock_quantity, updated_at, product_id) VALUES
@@ -102,15 +102,109 @@ INSERT INTO public.product_variants (id, created_at, size, sku, stock_quantity, 
 (38, '2024-03-01 10:00:00', 'M',        'RAW-SEAM-HOODIE-M',         10, '2024-03-01 10:00:00', 10),
 (39, '2024-03-01 10:00:00', 'L',        'RAW-SEAM-HOODIE-L',         10, '2024-03-01 10:00:00', 10),
 (40, '2024-03-01 10:00:00', 'XL',       'RAW-SEAM-HOODIE-XL',        10, '2024-03-01 10:00:00', 10)
-ON CONFLICT DO NOTHING;
+ON CONFLICT DO NOTHING^^
 
 -- ─── Sequences ────────────────────────────────────────────────
-SELECT pg_catalog.setval('public.collections_id_seq',      3,  true);
-SELECT pg_catalog.setval('public.roles_id_seq',            2,  true);
-SELECT pg_catalog.setval('public.users_id_seq',            5,  true);
-SELECT pg_catalog.setval('public.products_id_seq',         10, true);
-SELECT pg_catalog.setval('public.product_images_id_seq',   10, true);
-SELECT pg_catalog.setval('public.product_variants_id_seq', 40, true);
-SELECT pg_catalog.setval('public.refresh_tokens_id_seq',   17, true);
+SELECT pg_catalog.setval('public.collections_id_seq',      3,  true)^^
+SELECT pg_catalog.setval('public.roles_id_seq',            2,  true)^^
+SELECT pg_catalog.setval('public.users_id_seq',            5,  true)^^
+SELECT pg_catalog.setval('public.products_id_seq',         10, true)^^
+SELECT pg_catalog.setval('public.product_images_id_seq',   10, true)^^
+SELECT pg_catalog.setval('public.product_variants_id_seq', 40, true)^^
+SELECT pg_catalog.setval('public.refresh_tokens_id_seq',   17, true)^^
 
-SET session_replication_role = DEFAULT;
+SET session_replication_role = DEFAULT^^
+
+SELECT setval('collections_id_seq', (SELECT MAX(id) FROM collections))^^
+
+-- ─── Funzione slugify ─────────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.slugify(value TEXT)
+RETURNS TEXT AS $$
+BEGIN
+    RETURN lower(
+        regexp_replace(
+            regexp_replace(
+                trim(value),
+                '[^a-z0-9\s-]', '', 'gi'
+            ),
+            '\s+', '-', 'g'
+        )
+    );
+END;
+$$ LANGUAGE plpgsql^^
+
+-- ─── Funzione trigger collections ────────────────────────────
+CREATE OR REPLACE FUNCTION generate_collection_slug()
+RETURNS TRIGGER AS $$
+DECLARE
+  base_slug TEXT;
+  final_slug TEXT;
+  counter INTEGER := 2;
+BEGIN
+  IF TG_OP = 'INSERT'
+     OR NEW.slug IS NULL
+     OR NEW.slug = ''
+     OR NEW.name IS DISTINCT FROM OLD.name THEN
+    base_slug := public.slugify(NEW.name);
+    final_slug := base_slug;
+    IF final_slug IS NULL OR final_slug = '' THEN
+      RAISE EXCEPTION 'Cannot generate slug from empty collection name';
+    END IF;
+    WHILE EXISTS (
+      SELECT 1 FROM collections c
+      WHERE c.slug = final_slug
+        AND (TG_OP = 'INSERT' OR c.id <> NEW.id)
+    ) LOOP
+      final_slug := base_slug || '-' || counter;
+      counter := counter + 1;
+    END LOOP;
+    NEW.slug := final_slug;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql^^
+
+-- ─── Funzione trigger products ────────────────────────────────
+CREATE OR REPLACE FUNCTION generate_product_slug()
+RETURNS TRIGGER AS $$
+DECLARE
+  base_slug TEXT;
+  final_slug TEXT;
+  counter INTEGER := 2;
+BEGIN
+  IF TG_OP = 'INSERT'
+     OR NEW.slug IS NULL
+     OR NEW.slug = ''
+     OR NEW.name IS DISTINCT FROM OLD.name THEN
+    base_slug := public.slugify(NEW.name);
+    final_slug := base_slug;
+    IF final_slug IS NULL OR final_slug = '' THEN
+      RAISE EXCEPTION 'Cannot generate slug from empty product name';
+    END IF;
+    WHILE EXISTS (
+      SELECT 1 FROM products p
+      WHERE p.slug = final_slug
+        AND (TG_OP = 'INSERT' OR p.id <> NEW.id)
+    ) LOOP
+      final_slug := base_slug || '-' || counter;
+      counter := counter + 1;
+    END LOOP;
+    NEW.slug := final_slug;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql^^
+
+-- ─── Trigger collections ──────────────────────────────────────
+DROP TRIGGER IF EXISTS trigger_generate_collection_slug ON collections^^
+CREATE TRIGGER trigger_generate_collection_slug
+    BEFORE INSERT OR UPDATE ON collections
+    FOR EACH ROW
+    EXECUTE FUNCTION generate_collection_slug()^^
+
+-- ─── Trigger products ─────────────────────────────────────────
+DROP TRIGGER IF EXISTS trigger_generate_product_slug ON products^^
+CREATE TRIGGER trigger_generate_product_slug
+    BEFORE INSERT OR UPDATE ON products
+    FOR EACH ROW
+    EXECUTE FUNCTION generate_product_slug()^^
