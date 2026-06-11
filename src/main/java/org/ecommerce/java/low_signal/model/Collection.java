@@ -32,9 +32,8 @@ public class Collection {
   @Column(nullable = false, length = 100)
   private String name;
 
-  @NotBlank(message = "Enter slug of collection")
   @Size(max = 100)
-  @Column(nullable = false, unique = true, length = 100)
+  @Column(unique = true, length = 100, nullable = false, insertable = false)
   private String slug;
 
   @NotBlank(message = "Enter description of collection")
