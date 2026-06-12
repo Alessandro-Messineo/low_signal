@@ -38,6 +38,7 @@ public class ProductDTO {
     dto.createdAt = product.getCreatedAt();
     dto.updatedAt = product.getUpdatedAt();
     dto.collectionId = product.getCollection().getId();
+    dto.collectionName = product.getCollection().getName();
     dto.images = product.getImages();
     dto.variants = product.getVariants();
     return dto;
