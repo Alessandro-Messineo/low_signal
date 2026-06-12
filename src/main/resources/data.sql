@@ -105,17 +105,16 @@ INSERT INTO public.product_variants (id, created_at, size, sku, stock_quantity, 
 ON CONFLICT DO NOTHING^^
 
 -- ─── Sequences ────────────────────────────────────────────────
-SELECT pg_catalog.setval('public.collections_id_seq',      3,  true)^^
-SELECT pg_catalog.setval('public.roles_id_seq',            2,  true)^^
-SELECT pg_catalog.setval('public.users_id_seq',            5,  true)^^
-SELECT pg_catalog.setval('public.products_id_seq',         10, true)^^
-SELECT pg_catalog.setval('public.product_images_id_seq',   10, true)^^
-SELECT pg_catalog.setval('public.product_variants_id_seq', 40, true)^^
-SELECT pg_catalog.setval('public.refresh_tokens_id_seq',   17, true)^^
+SELECT setval('public.collections_id_seq',      (SELECT MAX(id) FROM public.collections))^^
+SELECT setval('public.roles_id_seq',             (SELECT MAX(id) FROM public.roles))^^
+SELECT setval('public.users_id_seq',             (SELECT MAX(id) FROM public.users))^^
+SELECT setval('public.products_id_seq',          (SELECT MAX(id) FROM public.products))^^
+SELECT setval('public.product_images_id_seq',    (SELECT MAX(id) FROM public.product_images))^^
+SELECT setval('public.product_variants_id_seq',  (SELECT MAX(id) FROM public.product_variants))^^
 
 SET session_replication_role = DEFAULT^^
 
-SELECT setval('collections_id_seq', (SELECT MAX(id) FROM collections))^^
+
 
 -- ─── Funzione slugify ─────────────────────────────────────────
 CREATE OR REPLACE FUNCTION public.slugify(value TEXT)
