@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173/", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:5173", "http://192.168.1.3:5173"}, allowCredentials = "true")
 @RequestMapping("/products")
 public class ProductController {
 

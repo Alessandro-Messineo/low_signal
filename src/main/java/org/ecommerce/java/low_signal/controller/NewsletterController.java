@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173/", allowCredentials = "true") 
+@CrossOrigin(origins = {"http://localhost:5173", "http://192.168.1.3:5173"}, allowCredentials = "true") 
 @RequestMapping("/newsletter")
 public class NewsletterController {
 
