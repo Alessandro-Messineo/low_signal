@@ -2,7 +2,6 @@ package org.ecommerce.java.low_signal.security;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +17,14 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private DatabaseUserDetailService userDetailService;
+    private final DatabaseUserDetailService userDetailService;
+
+    public JwtFilter(JwtUtil jwtUtil, DatabaseUserDetailService userDetailService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailService = userDetailService;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,

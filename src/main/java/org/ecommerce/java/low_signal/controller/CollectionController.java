@@ -2,7 +2,6 @@ package org.ecommerce.java.low_signal.controller;
 
 import org.ecommerce.java.low_signal.model.Collection;
 import org.ecommerce.java.low_signal.service.CollectionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +20,11 @@ import java.util.Optional;
 @RequestMapping("/collections")
 public class CollectionController {
 
-    @Autowired
-    private CollectionService collectionService;
+    private final CollectionService collectionService;
+
+    public CollectionController(CollectionService collectionService) {
+        this.collectionService = collectionService;
+    }
 
     @GetMapping
     public ResponseEntity<List<Collection>> getAllCollections() {

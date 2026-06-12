@@ -15,7 +15,6 @@ import org.ecommerce.java.low_signal.security.DatabaseUserDetails;
 import org.ecommerce.java.low_signal.security.DatabaseUserDetailService;
 import org.ecommerce.java.low_signal.security.JwtUtil;
 import org.ecommerce.java.low_signal.service.RefreshTokenService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,26 +36,35 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-        @Autowired
-        private AuthenticationManager authManager;
-        @Autowired
-        private JwtUtil jwtUtil;
-        @Autowired
-        private RefreshTokenService refreshTokenService;
-        @Autowired
-        private DatabaseUserDetailService userDetailService;
-        @Autowired
-        private UserRepository userRepository;
-        @Autowired
-        private RoleRepository roleRepository;
-        @Autowired
-        private PasswordEncoder passwordEncoder;
+        private final AuthenticationManager authManager;
+
+        private final JwtUtil jwtUtil;
+
+        private final RefreshTokenService refreshTokenService;
+
+        private final DatabaseUserDetailService userDetailService;
+
+        private final UserRepository userRepository;
+
+        private final RoleRepository roleRepository;
+        
+        private final PasswordEncoder passwordEncoder;
 
         @Value("${app.cookie.secure}")
         private boolean cookieSecure;
 
         @Value("${app.cookie.same-site}")
         private String cookieSameSite;
+
+        public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil, RefreshTokenService refreshTokenService, DatabaseUserDetailService userDetailService, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+                this.authManager = authManager;
+                this.jwtUtil = jwtUtil;
+                this.refreshTokenService = refreshTokenService;
+                this.userDetailService = userDetailService;
+                this.userRepository = userRepository;
+                this.roleRepository = roleRepository;
+                this.passwordEncoder = passwordEncoder;
+        }
 
         @PostMapping("/register")
         public ResponseEntity<?> register(@Valid @RequestBody RegisterDto dto,

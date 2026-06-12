@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.ecommerce.java.low_signal.model.Newsletter;
 import org.ecommerce.java.low_signal.service.NewsletterService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +16,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/newsletter")
 public class NewsletterController {
 
-    @Autowired
-    private NewsletterService newsletterService;
+    private final NewsletterService newsletterService;
+
+    public NewsletterController(NewsletterService newsletterService) {
+        this.newsletterService = newsletterService;
+    }
 
     @PostMapping
     public ResponseEntity<Map<String, String>> subscribe(@RequestBody Map<String, String> request) {

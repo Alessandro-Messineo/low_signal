@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.ecommerce.java.low_signal.model.RefreshToken;
 import org.ecommerce.java.low_signal.model.User;
 import org.ecommerce.java.low_signal.repository.RefreshTokenRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +16,11 @@ public class RefreshTokenService {
     @Value("${jwt.refresh-expiration}")
     private long refreshExpiration; // es. 604800000 = 7 giorni in ms
 
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository) {
+        this.refreshTokenRepository = refreshTokenRepository;
+    }
 
     // Crea un nuovo refresh token per l'utente e lo salva nel DB
     @Transactional
