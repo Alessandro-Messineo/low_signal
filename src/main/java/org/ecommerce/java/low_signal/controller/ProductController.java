@@ -4,16 +4,20 @@ import java.util.List;
 import java.util.Optional;
 
 import org.ecommerce.java.low_signal.dto.ProductDTO;
+import org.ecommerce.java.low_signal.model.Product;
 import org.ecommerce.java.low_signal.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173", "http://192.168.1.3:5173"}, allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:5173", "http://192.168.1.3:5173" }, allowCredentials = "true")
 @RequestMapping("/products")
 public class ProductController {
 
@@ -46,4 +50,18 @@ public class ProductController {
         List<ProductDTO> related = productService.getRelatedProducts(slug);
         return ResponseEntity.ok(related);
     }
+
+    @PostMapping
+    public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO product) {
+        ProductDTO newProduct = productService.createProduct(product);
+        return ResponseEntity.ok(newProduct);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable Integer id, @RequestBody ProductDTO product) {
+        Optional<ProductDTO> updated = productService.updateProduct(id, product);
+        return updated.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }
