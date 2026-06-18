@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.ecommerce.java.low_signal.dto.ProductDTO;
-import org.ecommerce.java.low_signal.model.Product;
 import org.ecommerce.java.low_signal.service.ProductService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
