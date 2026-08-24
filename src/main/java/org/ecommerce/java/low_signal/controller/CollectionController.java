@@ -3,7 +3,6 @@ package org.ecommerce.java.low_signal.controller;
 import org.ecommerce.java.low_signal.model.Collection;
 import org.ecommerce.java.low_signal.service.CollectionService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = {"http://localhost:5173", "http://192.168.1.3:5173"}, allowCredentials = "true")
 @RequestMapping("/collections")
 public class CollectionController {
 
