@@ -104,6 +104,26 @@ INSERT INTO public.product_variants (id, created_at, size, sku, stock_quantity, 
 (40, '2024-03-01 10:00:00', 'XL',       'RAW-SEAM-HOODIE-XL',        10, '2024-03-01 10:00:00', 10)
 ON CONFLICT DO NOTHING^^
 
+-- ─── Addresses ───────────────────────────────────────────────
+INSERT INTO public.addresses (id, city, country, full_name, postal_code, province, street) VALUES
+(1, 'Milano',      'IT', 'Mario Rossi',   '20100', 'Milano',     'Via Roma 10'),
+(2, 'Roma',        'IT', 'Luca Ruggeri',  '00100', 'Roma',       'Via del Corso 25')
+ON CONFLICT DO NOTHING^^
+
+-- ─── Orders ───────────────────────────────────────────────────
+INSERT INTO public.orders (id, created_at, order_number, payment_status, shipping_price, stripe_payment_intent, subtotal, total_price, billing_address_id, shipping_address_id, user_id) VALUES
+(1, '2025-03-15 14:30:00', 'ORD-20250315-001', 'PAID',      5.99,  NULL, 148.00, 153.99, 1, 1, 1),
+(2, '2025-03-20 09:15:00', 'ORD-20250320-002', 'PAID',      8.99,  NULL, 578.00, 586.99, 2, 2, 3)
+ON CONFLICT DO NOTHING^^
+
+-- ─── Order Items ──────────────────────────────────────────────
+INSERT INTO public.order_items (id, product_name, product_price, quantity, size, order_id, product_id, product_variant_id) VALUES
+(1, 'WRAITH HOODIE',         148.00, 1, 'L',        1, 1, 4),
+(2, 'EXOSKELETON CARGO',     212.00, 1, '32',       2, 2, 8),
+(3, 'SIGNAL BOMBER',         298.00, 1, 'M',        2, 3, 13),
+(4, 'VOID CAMP CAP',          68.00, 1, 'ONE SIZE', 2, 4, 16)
+ON CONFLICT DO NOTHING^^
+
 -- ─── Sequences ────────────────────────────────────────────────
 SELECT setval('public.collections_id_seq',      (SELECT MAX(id) FROM public.collections))^^
 SELECT setval('public.roles_id_seq',             (SELECT MAX(id) FROM public.roles))^^
@@ -111,6 +131,9 @@ SELECT setval('public.users_id_seq',             (SELECT MAX(id) FROM public.use
 SELECT setval('public.products_id_seq',          (SELECT MAX(id) FROM public.products))^^
 SELECT setval('public.product_images_id_seq',    (SELECT MAX(id) FROM public.product_images))^^
 SELECT setval('public.product_variants_id_seq',  (SELECT MAX(id) FROM public.product_variants))^^
+SELECT setval('public.addresses_id_seq',         (SELECT MAX(id) FROM public.addresses))^^
+SELECT setval('public.orders_id_seq',            (SELECT MAX(id) FROM public.orders))^^
+SELECT setval('public.order_items_id_seq',       (SELECT MAX(id) FROM public.order_items))^^
 
 SET session_replication_role = DEFAULT^^
 
