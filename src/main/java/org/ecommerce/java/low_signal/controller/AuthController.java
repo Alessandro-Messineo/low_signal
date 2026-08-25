@@ -46,7 +46,7 @@ public class AuthController {
         private final UserRepository userRepository;
 
         private final RoleRepository roleRepository;
-        
+
         private final PasswordEncoder passwordEncoder;
 
         @Value("${app.cookie.secure}")
@@ -55,7 +55,9 @@ public class AuthController {
         @Value("${app.cookie.same-site}")
         private String cookieSameSite;
 
-        public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil, RefreshTokenService refreshTokenService, DatabaseUserDetailService userDetailService, UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+        public AuthController(AuthenticationManager authManager, JwtUtil jwtUtil,
+                        RefreshTokenService refreshTokenService, DatabaseUserDetailService userDetailService,
+                        UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
                 this.authManager = authManager;
                 this.jwtUtil = jwtUtil;
                 this.refreshTokenService = refreshTokenService;
@@ -125,6 +127,39 @@ public class AuthController {
                 } catch (AuthenticationException e) {
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                                         .body(Map.of("error", "Invalid email or password"));
+                }
+        }
+
+        @GetMapping("/me")
+        public ResponseEntity<?> me(@CookieValue(name = "refreshToken", required = false) String tokenValue) {
+
+                if (tokenValue == null) {
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                        .body(Map.of("error", "Refresh token missing"));
+                }
+                try {
+                        RefreshToken validated = refreshTokenService.validateRefreshToken(tokenValue);
+
+                        DatabaseUserDetails userDetails = (DatabaseUserDetails) userDetailService
+                                        .loadUserByUsername(validated.getUser().getEmail());
+
+                        String newAccessToken = jwtUtil.generateToken(userDetails);
+
+                        User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+
+                        return ResponseEntity.ok(Map.of(
+                                        "id", user.getId(),
+                                        "email", user.getEmail(),
+                                        "name", user.getName(),
+                                        "surname", user.getSurname(),
+                                        "phone", user.getPhone(),
+                                        "roles", userDetails.getAuthorities().stream()
+                                                        .map(a -> a.getAuthority()).toList(),
+                                        "accessToken", newAccessToken));
+
+                } catch (RuntimeException e) {
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                        .body(Map.of("error", e.getMessage()));
                 }
         }
 
