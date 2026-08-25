@@ -1,12 +1,8 @@
 package org.ecommerce.java.low_signal.dto;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import org.ecommerce.java.low_signal.model.OrderItem;
-import org.ecommerce.java.low_signal.model.ProductImage;
 
 public class OrderItemDTO {
 
@@ -20,7 +16,6 @@ public class OrderItemDTO {
     private String productTag;
     private Integer productVariantId;
     private String sku;
-    private List<ProductImage> images;
 
     public static OrderItemDTO fromEntity(OrderItem item) {
         OrderItemDTO dto = new OrderItemDTO();
@@ -34,11 +29,6 @@ public class OrderItemDTO {
             dto.productId = item.getProduct().getId();
             dto.productSlug = item.getProduct().getSlug();
             dto.productTag = item.getProduct().getTag();
-            dto.images = item.getProduct().getImages() != null
-                    ? item.getProduct().getImages().stream()
-                            .filter(ProductImage::getIsPrimary)
-                            .collect(Collectors.toList())
-                    : Collections.emptyList();
         }
 
         if (item.getProductVariant() != null) {
@@ -127,13 +117,5 @@ public class OrderItemDTO {
 
     public void setSku(String value) {
         this.sku = value;
-    }
-
-    public List<ProductImage> getImages() {
-        return this.images;
-    }
-
-    public void setImages(List<ProductImage> value) {
-        this.images = value;
     }
 }
