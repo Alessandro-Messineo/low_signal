@@ -120,6 +120,9 @@ public class AuthController {
                                                         "accessToken", accessToken,
                                                         "id", userDetails.getId(),
                                                         "email", userDetails.getUsername(),
+                                                        "name", user.getName(),
+                                                        "surname", user.getSurname(),
+                                                        "phone", user.getPhone(),
                                                         "roles", userDetails.getAuthorities().stream()
                                                                         .map(a -> a.getAuthority()).toList()));
 
