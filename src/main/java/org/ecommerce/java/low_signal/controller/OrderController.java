@@ -3,8 +3,10 @@ package org.ecommerce.java.low_signal.controller;
 import java.util.List;
 
 import org.ecommerce.java.low_signal.dto.OrderDTO;
+import org.ecommerce.java.low_signal.security.DatabaseUserDetails;
 import org.ecommerce.java.low_signal.service.OrderService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,4 +26,13 @@ public class OrderController {
         List<OrderDTO> orders = orderService.getAllOrders();
         return ResponseEntity.ok(orders);
     }
+
+    @GetMapping("/my")
+    public ResponseEntity<List<OrderDTO>> getMyOrders() {
+        DatabaseUserDetails userDetails = (DatabaseUserDetails) SecurityContextHolder
+                .getContext().getAuthentication().getPrincipal();
+        List<OrderDTO> orders = orderService.getMyOrders(userDetails.getId());
+        return ResponseEntity.ok(orders);
+    }
 }
+    

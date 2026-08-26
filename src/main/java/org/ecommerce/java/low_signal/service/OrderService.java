@@ -25,4 +25,12 @@ public class OrderService {
                 .map(OrderDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public List<OrderDTO> getMyOrders(Integer userId) {
+        return orderRepository.findAllByUserIdWithDetails(userId)
+                .stream()
+                .map(OrderDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
 }
