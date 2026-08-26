@@ -24,7 +24,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -188,13 +187,15 @@ public class AuthController {
         }
 
         @PostMapping("/logout")
-        public ResponseEntity<?> logout() {
-                DatabaseUserDetails userDetails = (DatabaseUserDetails) SecurityContextHolder.getContext()
-                                .getAuthentication()
-                                .getPrincipal();
-
-                User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
-                refreshTokenService.revokeAllUserTokens(user);
+        public ResponseEntity<?> logout(
+                        @CookieValue(name = "refreshToken", required = false) String tokenValue) {
+                if (tokenValue != null) {
+                        try {
+                                RefreshToken validated = refreshTokenService.validateRefreshToken(tokenValue);
+                                refreshTokenService.revokeAllUserTokens(validated.getUser());
+                        } catch (RuntimeException e) {
+                        }
+                }
 
                 ResponseCookie expired = ResponseCookie.from("refreshToken", "")
                                 .httpOnly(true)
