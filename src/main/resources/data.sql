@@ -110,6 +110,12 @@ INSERT INTO public.addresses (id, city, country, full_name, postal_code, provinc
 (2, 'Roma',        'IT', 'Luca Ruggeri',  '00100', 'Roma',       'Via del Corso 25')
 ON CONFLICT DO NOTHING^^
 
+-- ─── User Addresses ─────────────────────────────────────────
+INSERT INTO public.user_addresses (id, full_name, street, city, postal_code, province, country, is_default, user_id) VALUES
+(1, 'Mario Rossi',  'Via Roma 10',      'Milano', '20100', 'Milano', 'IT', true,  1),
+(2, 'Luca Ruggeri', 'Via del Corso 25', 'Roma',   '00100', 'Roma',   'IT', true,  3)
+ON CONFLICT DO NOTHING^^
+
 -- ─── Orders ───────────────────────────────────────────────────
 INSERT INTO public.orders (id, created_at, order_number, payment_status, shipping_price, stripe_payment_intent, subtotal, total_price, billing_address_id, shipping_address_id, user_id) VALUES
 (1, '2025-03-15 14:30:00', 'ORD-20250315-001', 'PAID',      5.99,  NULL, 148.00, 153.99, 1, 1, 1),
@@ -132,6 +138,7 @@ SELECT setval('public.products_id_seq',          (SELECT MAX(id) FROM public.pro
 SELECT setval('public.product_images_id_seq',    (SELECT MAX(id) FROM public.product_images))^^
 SELECT setval('public.product_variants_id_seq',  (SELECT MAX(id) FROM public.product_variants))^^
 SELECT setval('public.addresses_id_seq',         (SELECT MAX(id) FROM public.addresses))^^
+SELECT setval('public.user_addresses_id_seq',    (SELECT COALESCE(MAX(id), 0) FROM public.user_addresses))^^
 SELECT setval('public.orders_id_seq',            (SELECT MAX(id) FROM public.orders))^^
 SELECT setval('public.order_items_id_seq',       (SELECT MAX(id) FROM public.order_items))^^
 
