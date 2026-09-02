@@ -61,4 +61,14 @@ public class JwtUtil {
                 .parseSignedClaims(token)
                 .getPayload();
     }
+
+    public boolean hasMinRemainingTime(String token, long minMillis) {
+        try {
+            Claims claims = getClaims(token);
+            long remaining = claims.getExpiration().getTime() - System.currentTimeMillis();
+            return remaining > minMillis;
+        } catch (JwtException e) {
+            return false;
+        }
+    }
 }
