@@ -133,7 +133,9 @@ public class AuthController {
         }
 
         @GetMapping("/me")
-        public ResponseEntity<?> me(@CookieValue(name = "refreshToken", required = false) String tokenValue) {
+        public ResponseEntity<?> me(
+                        @CookieValue(name = "refreshToken", required = false) String tokenValue,
+                        @RequestHeader(name = "Authorization", required = false) String authHeader) {
 
                 if (tokenValue == null) {
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -145,7 +147,17 @@ public class AuthController {
                         DatabaseUserDetails userDetails = (DatabaseUserDetails) userDetailService
                                         .loadUserByUsername(validated.getUser().getEmail());
 
-                        String newAccessToken = jwtUtil.generateToken(userDetails);
+                        String accessToken;
+                        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                                String existingToken = authHeader.substring(7);
+                                if (jwtUtil.hasMinRemainingTime(existingToken, 300_000)) {
+                                        accessToken = existingToken;
+                                } else {
+                                        accessToken = jwtUtil.generateToken(userDetails);
+                                }
+                        } else {
+                                accessToken = jwtUtil.generateToken(userDetails);
+                        }
 
                         User user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
 
@@ -157,7 +169,7 @@ public class AuthController {
                                         "phone", user.getPhone(),
                                         "roles", userDetails.getAuthorities().stream()
                                                         .map(a -> a.getAuthority()).toList(),
-                                        "accessToken", newAccessToken));
+                                        "accessToken", accessToken));
 
                 } catch (RuntimeException e) {
                         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
