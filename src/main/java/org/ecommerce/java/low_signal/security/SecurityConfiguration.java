@@ -39,10 +39,18 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/products").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/products/{id}").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/collections").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/collections").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/collections/{id}").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/users").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/orders").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/orders").authenticated()
                         .requestMatchers("/orders/my").authenticated()
-                        .requestMatchers("/**").permitAll())
+                        .requestMatchers(HttpMethod.POST, "/newsletter").permitAll()
+                        .anyRequest().denyAll())
                 // Il JwtFilter viene eseguito prima del filtro standard di Spring Security
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
