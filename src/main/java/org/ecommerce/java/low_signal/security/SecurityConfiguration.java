@@ -38,9 +38,26 @@ public class SecurityConfiguration {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
                         .ignoringRequestMatchers("/api/auth/**"))
-                // Niente sessioni: ogni richiesta è autenticata tramite il token JWT
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000)
+                                .requestMatcher(request -> true)
+                        )
+                        .contentSecurityPolicy(csp -> csp
+                                .policyDirectives(
+                                        "default-src 'self'; " +
+                                        "script-src 'self'; " +
+                                        "style-src 'self' 'unsafe-inline'; " +
+                                        "img-src 'self' data: https:; " +
+                                        "font-src 'self' https:; " +
+                                        "connect-src 'self'; " +
+                                        "frame-ancestors 'none'"
+                                )
+                        )
+                )
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
@@ -55,7 +72,6 @@ public class SecurityConfiguration {
                         .requestMatchers("/orders/my").authenticated()
                         .requestMatchers(HttpMethod.POST, "/newsletter").permitAll()
                         .anyRequest().denyAll())
-                // Il JwtFilter viene eseguito prima del filtro standard di Spring Security
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
