@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -43,7 +44,11 @@ public class User {
     private String email;
 
     @NotBlank(message = "Password cannot be empty")
-    @Size(min = 5, max = 100)
+    @Size(min = 6, max = 100)
+    @Pattern(
+        regexp = "^(?=.*\\d)(?=.*[A-Z])(?=.*[\\W_]).{6,}$",
+        message = "Password must contain at least one uppercase letter, one digit, and one special character"
+    )
     @Column(nullable = false, length = 100)
     private String password;
 

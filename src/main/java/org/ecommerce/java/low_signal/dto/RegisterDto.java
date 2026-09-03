@@ -2,6 +2,7 @@ package org.ecommerce.java.low_signal.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 public class RegisterDto {
@@ -20,7 +21,11 @@ public class RegisterDto {
     private String email;
 
     @NotBlank(message = "Password cannot be empty")
-    @Size(min = 5, max = 100)
+    @Size(min = 6, max = 100)
+    @Pattern(
+        regexp = "^(?=.*\\d)(?=.*[A-Z])(?=.*[\\W_]).{6,}$",
+        message = "Password must contain at least one uppercase letter, one digit, and one special character"
+    )
     private String password;
 
     @NotBlank(message = "Phone cannot be empty")
