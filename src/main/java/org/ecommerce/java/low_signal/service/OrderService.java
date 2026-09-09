@@ -92,6 +92,14 @@ public class OrderService {
                         + " does not belong to product " + product.getId());
             }
 
+            if (variant.getStockQuantity() < itemRequest.getQuantity()) {
+                throw new RuntimeException(
+                        "Insufficient stock for " + product.getName()
+                                + " size " + variant.getSize()
+                                + ". Available: " + variant.getStockQuantity()
+                                + ", requested: " + itemRequest.getQuantity());
+            }
+
             OrderItem orderItem = new OrderItem();
             orderItem.setProduct(product);
             orderItem.setProductVariant(variant);
@@ -103,6 +111,13 @@ public class OrderService {
             orderItems.add(orderItem);
 
             subtotal = subtotal.add(product.getPrice().multiply(BigDecimal.valueOf(itemRequest.getQuantity())));
+        }
+
+        for (OrderItem item : orderItems) {
+            ProductVariant variant = item.getProductVariant();
+            int newStock = variant.getStockQuantity() - item.getQuantity();
+            variant.setStockQuantity(newStock);
+            productVariantRepository.save(variant);
         }
 
         BigDecimal shippingPrice = BigDecimal.ZERO;
