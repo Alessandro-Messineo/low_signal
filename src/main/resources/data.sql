@@ -7,7 +7,7 @@ SET session_replication_role = replica^^
 
 -- ─── Collections ──────────────────────────────────────────────
 INSERT INTO public.collections (id, collection_status, created_at, description, featured, hero_image, name, season, slug) VALUES
-(1, 'DISPONIBILE', '2025-03-01 10:00:00', 'Six pieces built for friction. Functional silhouettes, industrial materials, zero compromise. The collection that defines the season.', false, 'https://images.unsplash.com/photo-1756276900419-868625adff43?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 25', 'SS25', 'spring-summer-25'),
+(1, 'AVAILABLE', '2025-03-01 10:00:00', 'Six pieces built for friction. Functional silhouettes, industrial materials, zero compromise. The collection that defines the season.', false, 'https://images.unsplash.com/photo-1756276900419-868625adff43?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 25', 'SS25', 'spring-summer-25'),
 (2, 'SOLD_OUT',    '2024-09-01 10:00:00', 'Heavy textiles. Muted tones. A collection built for cold cities and darker hours. Three silhouettes, maximum impact.',                false, 'https://images.unsplash.com/photo-1771580425850-3dbcdfd97b54?w=1400&h=900&fit=crop&auto=format', 'FALL / WINTER 24',   'FW24', 'fall-winter-24'),
 (3, 'SOLD_OUT',    '2024-03-01 10:00:00', 'Lightweight construction, maximum movement. Pigment-dyed canvas and technical mesh built for the streets in summer.',             false, 'https://images.unsplash.com/photo-1772997657431-6c3272ccaf15?w=1400&h=900&fit=crop&auto=format', 'SPRING / SUMMER 24', 'SS24', 'spring-summer-24')
 ON CONFLICT DO NOTHING^^
