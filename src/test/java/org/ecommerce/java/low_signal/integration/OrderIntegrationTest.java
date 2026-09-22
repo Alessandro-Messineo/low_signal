@@ -23,7 +23,7 @@ import jakarta.persistence.EntityManager;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-class OrderServiceIntegrationTest {
+class OrderIntegrationTest {
 
     @Autowired
     private OrderService orderService;
