@@ -145,6 +145,25 @@ public class OrderService {
         return OrderDTO.fromEntity(savedOrder);
     }
 
+    /**
+     * Restituisce al magazzino le quantita' prelevate per un ordine.
+     * Chiamato quando il pagamento fallisce, viene annullato o l'ordine scade.
+     */
+    @Transactional
+    public void releaseStock(Order order) {
+        if (order == null || order.getOrderItems() == null) {
+            return;
+        }
+        for (OrderItem item : order.getOrderItems()) {
+            ProductVariant variant = item.getProductVariant();
+            if (variant == null) {
+                continue;
+            }
+            variant.setStockQuantity(variant.getStockQuantity() + item.getQuantity());
+            productVariantRepository.save(variant);
+        }
+    }
+
     private Address resolveAddress(Integer userId, Integer addressId,
             CreateOrderRequest.AddressRequest inlineAddress) {
         if (addressId != null) {

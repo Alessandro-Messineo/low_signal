@@ -37,7 +37,10 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
-                        .ignoringRequestMatchers("/api/auth/**"))
+                        .ignoringRequestMatchers("/api/auth/**")
+                        // Stripe non puo' mandare il token XSRF: la sicurezza
+                        // del webhook sta nella verifica della firma
+                        .ignoringRequestMatchers("/payments/webhook"))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .headers(headers -> headers
@@ -71,6 +74,12 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.POST, "/orders").authenticated()
                         .requestMatchers("/orders/my").authenticated()
                         .requestMatchers(HttpMethod.POST, "/newsletter").permitAll()
+                        // ── Pagamenti Stripe ─────────────────────────────────
+                        .requestMatchers(HttpMethod.POST, "/payments/intent").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/payments/status/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/payments/release-expired").hasAuthority("ADMIN")
+                        // Il webhook e' pubblico: la protezione e' la firma HMAC
+                        .requestMatchers(HttpMethod.POST, "/payments/webhook").permitAll()
                         .anyRequest().denyAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
