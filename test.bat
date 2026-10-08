@@ -1,2 +1,2 @@
 @echo off
-mvn test "-Dspring.profiles.active=test"
+.\mvnw.cmd test "-Dspring.profiles.active=test"
