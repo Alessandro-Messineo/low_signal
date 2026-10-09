@@ -66,7 +66,7 @@ public class StripeGateway {
                 .build();
 
         try {
-            PaymentIntent intent = stripeClient.paymentIntents().create(params.build(), options);
+            PaymentIntent intent = stripeClient.v1().paymentIntents().create(params.build(), options);
             return toData(intent);
         } catch (StripeException e) {
             throw stripeError("Impossibile creare il pagamento su Stripe", e);
@@ -76,7 +76,7 @@ public class StripeGateway {
     /** Recupera uno stato reale del PaymentIntent da Stripe. */
     public PaymentIntentData retrievePaymentIntent(String paymentIntentId) {
         try {
-            return toData(stripeClient.paymentIntents().retrieve(paymentIntentId));
+            return toData(stripeClient.v1().paymentIntents().retrieve(paymentIntentId));
         } catch (StripeException e) {
             throw stripeError("Impossibile leggere il pagamento da Stripe", e);
         }
@@ -85,7 +85,7 @@ public class StripeGateway {
     /** Annulla un PaymentIntent: dopo l'annullamento il client_secret non e' piu' pagabile. */
     public void cancelPaymentIntent(String paymentIntentId) {
         try {
-            stripeClient.paymentIntents().cancel(paymentIntentId);
+            stripeClient.v1().paymentIntents().cancel(paymentIntentId);
         } catch (StripeException e) {
             throw stripeError("Impossibile annullare il pagamento su Stripe", e);
         }

@@ -81,8 +81,8 @@ public class WebhookService {
         }
 
         JsonNode objectNode = parseObjectNode(body);
-        String paymentIntentId = objectNode.path("id").asText(null);
-        String objectType = objectNode.path("object").asText("");
+        String paymentIntentId = objectNode.path("id").asString(null);
+        String objectType = objectNode.path("object").asString("");
 
         StripeWebhookEvent record = new StripeWebhookEvent();
         record.setEventId(eventId);
