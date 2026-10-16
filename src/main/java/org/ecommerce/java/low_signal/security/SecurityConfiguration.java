@@ -81,6 +81,15 @@ public class SecurityConfiguration {
                         // Il webhook e' pubblico: la protezione e' la firma HMAC
                         .requestMatchers(HttpMethod.POST, "/payments/webhook").permitAll()
                         .anyRequest().denyAll())
+                        // 401 con body JSON per le richieste senza JWT valido: cosi'
+                        // il frontend puo' rinnovare il token e riprovare.
+                        // 403 con body JSON: senza il body il rifiuto CSRF e'
+                        // indistinguibile da un 403 di autorizzazione.
+                        // CsrfConfigurer non espone accessDeniedHandler(...):
+                        // il CsrfFilter eredita proprio questo handler
+                        .exceptionHandling(exception -> exception
+                                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+                                .accessDeniedHandler(new JsonCsrfAccessDeniedHandler()))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
