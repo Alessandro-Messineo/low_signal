@@ -52,10 +52,11 @@ public class StripeGateway {
         PaymentIntentCreateParams.Builder params = PaymentIntentCreateParams.builder()
                 .setAmount(amountCents)
                 .setCurrency(currency)
-                .setAutomaticPaymentMethods(
-                        PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
-                                .setEnabled(true)
-                                .build());
+                // La conferma e' lato server e il design prevede solo la carta:
+                // esplicitiamo il tipo invece di usare automatic_payment_methods,
+                // che abiliterebbe metodi non attivati sull'account (Klarna,
+                // Satispay, Amazon Pay...) e non permette di restringerli dal client.
+                .addPaymentMethodType("card");
 
         if (metadata != null) {
             metadata.forEach(params::putMetadata);
