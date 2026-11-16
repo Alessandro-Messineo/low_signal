@@ -3,7 +3,9 @@
 -- Usa ON CONFLICT DO NOTHING per evitare errori al riavvio
 -- =============================================================
 
-SET session_replication_role = replica^^
+-- NOTA: il vecchio "SET session_replication_role = replica" e' stato rimosso:
+-- su Supabase il ruolo postgres non e' superuser e il SET fallirebbe.
+-- Gli INSERT qui sotto rispettano l'ordine delle FK e usano ON CONFLICT DO NOTHING.
 
 -- ─── Collections ──────────────────────────────────────────────
 INSERT INTO public.collections (id, collection_status, created_at, description, featured, hero_image, name, season, slug) VALUES
