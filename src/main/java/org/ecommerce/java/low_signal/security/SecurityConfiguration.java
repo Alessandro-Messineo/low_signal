@@ -64,6 +64,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                        // Health check pubblico per Render
+                        .requestMatchers(HttpMethod.GET, "/health").permitAll()
                         .requestMatchers(HttpMethod.POST, "/products").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/products/{id}").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/collections").permitAll()
@@ -119,10 +121,6 @@ public class SecurityConfiguration {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    // @Bean
-    // DatabaseUserDetailService userDetailService() {
-    // return new DatabaseUserDetailService();
-    // }
 
     @Bean
     DaoAuthenticationProvider authenticationProvider(PasswordEncoder passwordEncoder,
