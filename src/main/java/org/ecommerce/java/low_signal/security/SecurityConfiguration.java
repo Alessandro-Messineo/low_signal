@@ -1,7 +1,12 @@
 package org.ecommerce.java.low_signal.security;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +28,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
+
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfiguration.class);
+
+    // Origine/i del frontend (CORS): una o piu' separate da virgola.
+    // Iniettata sul campo per poter chiamare corsConfigurationSource() senza argomenti
+    // dalla filterChain qui sotto.
+    @Value("${FRONTEND_URL:http://localhost:3000}")
+    private String frontendUrl;
 
     private final JwtFilter jwtFilter;
 
@@ -100,20 +113,68 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of(
+
+        // Origini di sviluppo + quelle dichiarate in FRONTEND_URL
+        // (ammette piu' origini separate da virgola, es. "https://a.vercel.app,https://b.vercel.app")
+        List<String> allowedOrigins = new ArrayList<>(List.of(
             "http://localhost:3000",
             "http://localhost:5173",
-            "http://localhost:4200",
-            "${FRONTEND_URL}"
+            "http://localhost:4200"
         ));
+        for (String origin : parseExtraOrigins(frontendUrl)) {
+            if (!allowedOrigins.contains(origin)) {
+                allowedOrigins.add(origin);
+            }
+        }
+        config.setAllowedOriginPatterns(allowedOrigins);
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
+        // Visibile nei log di Render: serve a vedere ESATTAMENTE quali origini
+        // l'app ha ricevuto all'avvio (utile quando il browser segnala un 403 CORS)
+        log.info("CORS: origini ammesse {}", config.getAllowedOriginPatterns());
+        log.info("CORS: allow-credentials {}", config.getAllowCredentials());
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
+    }
+
+    /**
+     * Normalizza la variabile FRONTEND_URL.
+     *
+     * - ammette piu' origini separate da virgola (es. dominio principale + www);
+     * - toglie spazi e virgolette ai bordi e lo slash finale: l'origine inviata
+     *   dal browser non ha path, quindi "https://sito.it/" non combacerebbe mai
+     *   con "https://sito.it" e la richiesta finirebbe in 403;
+     * - ignora placeholder non risolti (">${FRONTEND_URL}").
+     */
+    static List<String> parseExtraOrigins(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return List.of();
+        }
+        LinkedHashSet<String> origins = new LinkedHashSet<>();
+        for (String part : raw.split(",")) {
+            String origin = part.trim();
+            if (origin.length() > 1
+                    && ((origin.startsWith("\"") && origin.endsWith("\""))
+                        || (origin.startsWith("'") && origin.endsWith("'")))) {
+                origin = origin.substring(1, origin.length() - 1).trim();
+            }
+            if (origin.isEmpty() || origin.contains("${")) {
+                continue;
+            }
+            while (origin.endsWith("/")) {
+                origin = origin.substring(0, origin.length() - 1);
+            }
+            if (!origin.isEmpty()) {
+                origins.add(origin);
+            }
+        }
+        return List.copyOf(origins);
     }
 
     @Bean
