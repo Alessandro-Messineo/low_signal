@@ -15,7 +15,11 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/collections")
+// /api/collections e' il path canonico: con il proxy same-origin di Vercel
+// "/collections" collide con la rotta SPA /collections (pagina). Il vecchio
+// path resta temporaneamente per non rompere il frontend gia' deployato:
+// rimuoverlo dopo il deploy del frontend.
+@RequestMapping({ "/api/collections", "/collections" })
 public class CollectionController {
 
     private final CollectionService collectionService;
